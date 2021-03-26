@@ -1,0 +1,254 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>.:Facturacion:.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
+	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
+	<!--script src="js/less-1.3.3.min.js"></script-->
+	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
+	
+	<link href="{% static "ventas/css/bootstrap.min.css" %}" rel="stylesheet">
+	<link href="{% static "ventas/css/style.css" %}" rel="stylesheet">
+	<link href="{% static "ventas/css/jquery-ui.css" %}" rel="stylesheet">
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="img/favicon.png">    
+	<script type="text/javascript" src="{% static "ventas/js/jquery.min.js" %}" ></script>
+	<script type="text/javascript" src="{% static "ventas/js/jquery-ui.js" %}" ></script>
+	<script type="text/javascript" src="{% static "ventas/js/jquery.dataTables.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "ventas/js/bootstrap.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "ventas/js/scripts.js" %}" ></script>
+  	<script type="text/javascript" src="{% static "ventas/js/accounting.min.js" %}" ></script>
+  
+ 
+  <style>
+  .ui-autocomplete-loading {
+    background: white url("{% static "ventas/img/loading.gif" %}") right center no-repeat;
+  }
+  </style>
+	
+</head>
+
+
+<body>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+				<div class="navbar-header">
+					 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="/">Home</a>
+				</div>
+				
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">						
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurar<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+																
+								<li>
+									<a href="/formapago/">Formas de Pago</a>
+								</li>
+								<li>
+									<a href="/banco/">Banco</a>
+								</li>
+								<li class="divider">
+								</li>
+								<li>
+									<a href="/tipodoc/">Tipo de Documentos</a>
+								</li>
+								<li>
+									<a href="/tipoimpuesto/">Tipo de Impuestos</a>
+								</li>
+
+							</ul>
+						</li>
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ventas<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/cliente/">Clientes</a>
+								</li>														
+								<li class="divider">
+								</li>	
+								<li>
+									<a href="/factura/">Factura clasica</a>
+								</li>						
+								<li class="divider">
+								</li>	
+								<li>
+									<a href="/postext/">Terminal Venta Texto</a>
+								</li>						
+								<li class="divider">
+								</li>													
+								
+								<li>
+									<a href="/reportes/ventas/">Reportes de Ventas</a>
+								</li>
+
+							</ul>
+						</li>
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Compras<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/proveedor/">Proveedores</a>
+								</li>
+								<li>
+									<a href="/factcompra/">Factura de compras</a>
+								</li>			
+								</li>						
+								<li class="divider">
+								</li>													
+								<li class="rptcompras"></li>								
+								<li>
+									<a href="/reportes/compras/">Reportes</a>
+								</li>								
+							</ul>
+						</li>
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Caja/Banco<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/tipocaja/">Cajas</a>
+								</li>								
+								<li>
+									<a href="/cuentabanco/">Cuentas Bancarias</a>
+								</li>
+								<li class="divider"></li>								
+								<li>
+									<a href="/opencaja/">Apertura Caja</a>
+								</li>
+								<li>
+									<a href="/closecaja/">Cierre Caja</a>
+								</li>
+								<li class="divider"></li>	
+								<li>
+									<a href="/openturno/">Apertura Turno</a>
+								</li>
+								<li>
+									<a href="/closeturno/">Cierre Turno</a>
+								</li>
+								<li class="divider"></li>	
+								<li>
+									<a href="/movcaja/">Mov. Caja</a>
+								</li>													
+								<li>
+									<a href="#">Mov. Banco</a>
+								</li>																
+							</ul>
+						</li>
+
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Inventario<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/categoria/">Categorias</a>
+								</li>	
+								<li>
+									<a href="/articulo/">Articulos</a>
+								</li>	
+								<li class="divider"></li>									
+								<li>
+									<a href="/inventario/">Movimientos</a>
+								</li>
+								<li class="divider"></li>									
+								<li>
+									<a href="/reportes/inventario/">Reportes</a>
+								</li>
+															
+							</ul>
+						</li>
+
+					</ul>
+					
+					<ul class="nav navbar-nav navbar-right">										
+						{% if request.session.empresa  %}
+						<li>							
+							<img src="{{ request.session.empresa.logo }}" alt="" height="40" width="120" />							 							
+						</li>
+						<li>							
+							 <a href="#"> {{  request.session.empresa.razon_social }}</a>
+							
+						</li>
+						{% endif %}					
+						{% if user.is_authenticated %}
+						 <li>													
+						 <a href="#">{{ user.username  }}</a>			
+						</li>
+						{% endif %}								
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Opciones<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/empresa/">Conf. Empresa</a>
+								</li>
+								<li>
+								{% if user.is_authenticated %}
+					 				<a href="/logout/">Salir</a>
+					 			{% else %}								
+									<a href="/register/">Register</a>
+								{% endif %}								
+								</li>
+								
+								<li class="divider">
+								</li>
+								
+							</ul>
+						</li>
+					</ul>
+				</div>
+				
+			</nav>
+			{% block main %}				
+			{% endblock %}
+			<div class="modal fade" id="modal-container" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+								<h4 class="modal-title" id="myModalLabel">
+									{% block modaltitle %}
+									
+									{% endblock %}
+								</h4>
+							</div>
+							<div class="modal-body">
+								   {% block modalbody %}
+									
+									{% endblock %}
+							</div>
+							<div class="modal-footer">
+								   {% block modalfoot %}
+									
+									{% endblock %}								 
+							</div>
+						</div>						
+					</div>					
+				</div> 	
+
+
+		</div>
+	</div>
+</div>
+</body>
+</html>
+
+ 
+	
+	
+	

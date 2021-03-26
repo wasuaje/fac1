@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Proveedores</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/proveedor/add/' ">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Proveedor</th><th>R.i.f</th><th>Email</th><th>Telefono</th><th>Accion</th></tr>
+	    {% for proveedor in proveedors %}
+	        <tr>
+	        	<td>{{ proveedor.razon_social }}</td>	        	
+	        	<td>{{ proveedor.rif }}</td>
+	        	<td>{{ proveedor.email }}</td>
+	        	<td>{{ proveedor.tlf }}</td>	        	            
+	        <td><a href="edit/{{proveedor.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{proveedor.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    <tr><td colspan="5">
+	    	<h3>No se encontraron registros</h3>	    
+	    </td></tr>
+	    {% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if proveedors.has_previous %}
+		            <a href="?page={{ proveedors.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ proveedors.number }} of {{ proveedors.paginator.num_pages }}.
+		        </span>
+
+		        {% if proveedors.has_next %}
+		            <a href="?page={{ proveedors.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

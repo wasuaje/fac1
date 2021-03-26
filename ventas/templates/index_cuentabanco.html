@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Cuentas Bancarias</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/cuentabanco/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>CuentaBanco</th><th>Codigo</th><th>A Nombre de</th><th>Accion</th></tr>
+	    {% for cuentabanco in cuentabancos %}
+	        <tr>
+	        	<td>{{ cuentabanco.banco }}</td>	        	
+	        	<td>{{ cuentabanco.numero }}</td>	        	
+            	<td>{{ cuentabanco.contacto }}</td>	        	
+	        <td><a href="edit/{{cuentabanco.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{cuentabanco.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	<tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    	</td></tr>
+	    {% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if cuentabancos.has_previous %}
+		            <a href="?page={{ cuentabancos.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ cuentabancos.number }} of {{ cuentabancos.paginator.num_pages }}.
+		        </span>
+
+		        {% if cuentabancos.has_next %}
+		            <a href="?page={{ cuentabancos.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

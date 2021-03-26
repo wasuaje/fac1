@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Detalle Factura de Compra</small>
+				</h1>
+			</div>
+
+						<!-Datos de la factura->
+            <div class="col-sm-6">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  Factura
+                </h3>
+              </div>
+				    <div class="col-sm-6"><h4>Factura:</h4></div>
+            <div class="col-sm-6"><h4> {{ factcompra.correlativo }} </h4></div>
+				    <div class="col-sm-6"><h4>Proveedor: </h4></div>
+            <div class="col-sm-6"><h4>{{ factcompra.proveedor }} </h4></div>
+				    <div class="col-sm-6"><h4>Rif:</h4></div>
+            <div class="col-sm-6"><h4> {{ factcompra.proveedor.rif }} </h4></div>
+				    <div class="col-sm-6"><h4>Fecha: </h4></div>
+            <div class="col-sm-6"><h4>{{ factcompra.fecha }} </h4></div>
+             </div>
+            </div>
+            <!-Totales factura->
+            
+            <div class="col-sm-6">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  Totales
+                </h3>
+              </div>
+
+            <div class="col-sm-6">
+            <h4>Subtotal</h4>
+            </div>
+            <div class="col-sm-6">
+            <h4>{{ factcompra.subtotal |floatformat:"2"|intcomma}}</h4>
+            </div>    
+
+            {% if factcompra.excento %}
+            <div class="col-sm-6">
+            <h4>Total Excento</h4>
+            </div>    
+            <div class="col-sm-6">
+            <h4> {{ factcompra.excento |floatformat:"2"|intcomma}}</h4>
+            </div>    
+            {% endif %}
+          
+          {% if factcompra.sujeto_dcto %}
+            <div class="col-sm-6">
+            <h5>Dto. {{ factcompra.pct_descuento }}% sobre {{factcompra.sujeto_dcto |floatformat:"2"|intcomma}} </h5>
+            </div>    
+            <div class="col-sm-6">            
+            <h4> {{ factcompra.tot_descuento |floatformat:"2"|intcomma}}</h4>
+            </div>            
+          {% endif %}
+
+          {% if factcompra.imponible %}          
+            <div class="col-sm-6">            
+            <h4>Base Imponible</h4>         
+            </div>            
+            <div class="col-sm-6">            
+            <h4> {{ factcompra.imponible |floatformat:"2"|intcomma }}</h4>    
+            </div>            
+            <div class="col-sm-6">                  
+            <h5>I.V.A{{ factcompra.pct_impuesto }}% sobre {{ factcompra.imponible |floatformat:"2"|intcomma}}</h5>          
+            </div>            
+            <div class="col-sm-6">            
+            <h4> {{ factcompra.tot_impuesto |floatformat:"2"|intcomma}}</h4>      
+            </div>            
+          {% endif %}
+            <div class="col-sm-6">            
+            <h3>Total General</h3>          
+            </div>
+            <div class="col-sm-6">                          
+            <h3> {{ factcompra.total_general|floatformat:"2"|intcomma }}</h3>          
+            </div>
+          </div>
+       </div>
+
+				    <div class="col-sm-12"> <center>				
+								<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/factcompra/'">Salir</button></center>	
+            </div>          		
+
+								    
+			
+			<div class="col-sm-12"><hr></div>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Articulo</th><th>Cantidad</th><th>Importe</th><th>Descuento</th><th>Impuesto</th><th>Total</th><th>Accion</th></tr>
+  					<tr>
+  					<form method="post" class="form" enctype="multipart/form-factcompra" id="myform" name="myform">
+  						{% csrf_token %}  						
+						{% for field in form %}				        
+							{% if field.label = 'Item' %}							
+							<td> <div class="ui-widget">
+							       <input id="search" class="special" type="text" size="10" name="search" autocomplete="off"> {{ field }} 
+							     </div>
+              </td>					  
+							{% else %}
+							 <td> {{ field }}  </td>
+							{% endif %}              
+						{% endfor %}
+						     <td> <button type="submit" class="btn btn-default" >Agregar</button></td>     
+						 </form>
+						</tr>
+            <tr>
+            {% for field in form %}              
+                <td>
+                  {% if field.errors %}
+                 <div class="alert alert-danger" role="alert">{{ field.errors }}</div>
+                 {% endif %}
+                </td>
+              
+            {% endfor %}
+            </tr>
+                      
+	    {% for linea in lineas %}
+	        <tr>
+	        	<td>{{ linea.item }}</td>	        	
+	        	<td>{{ linea.cantidad }}</td>	        	
+	        	<td>{{ linea.importe }}</td>	
+	        	<td>{{ linea.descuento }}</td>	
+            	<td>{{ linea.impuesto }}</td>
+            	<td>{{ linea.total }}</td>
+            	
+	        <td>	        	        
+	        <a href="delete/{{linea.pk}}/{{ id }}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	   <tr><td colspan="4">
+	    	    <h3>No se encontraron registros</h3>	    
+	    	    </td></tr>
+	    	{% endfor %}
+
+
+	</table>
+
+<script>
+
+$(document).ready(function() {
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+
+$( document ).ready(function() {
+   /*$('#id_importe').prop( "disabled", true );
+   $('#id_impuesto').prop( "disabled", true );
+   $('#id_total').prop( "disabled", true );*/
+   $('#id_documento').val({{ id }});
+
+});
+
+/*$(document).ready(function(){ 
+    $("#myform").submit(function(event){         
+            event.preventDefault(); 
+    }); 
+});*/
+
+$( "#id_cantidad" )
+  .change(function () {
+
+  	make_calculations()
+
+  })
+  .change();
+
+$( "#id_descuento" )
+  .change(function () {
+
+  	make_calculations()
+
+  })
+  .change();
+
+
+function make_calculations(){
+        
+    sub_imp=($('#id_cantidad').val() * $('#id_importe').val())*($('#id_impuesto').val()/100)
+    sub_dct=($('#id_cantidad').val() * $('#id_importe').val())*($('#id_descuento').val()/100)
+    total=$('#id_cantidad').val() * $('#id_importe').val()
+    
+    $('#id_total').val(total);          
+
+}
+
+  $(function() {    
+ 
+    $( "#search" ).autocomplete({
+      source: "/articulo/search/",
+      minLength: 2,
+      select: function( event, ui ) {
+        //console.log(ui.item + ui.item.value + ui.item.id);
+        //sub_imp=ui.item.importe*(ui.item.impuesto/100)
+        //sub_dct=ui.item.importe*(ui.item.descuento/100)
+
+        $('#id_importe').val(ui.item.importe);
+        $('#id_descuento').val(ui.item.descuento);
+        $('#id_impuesto').val(ui.item.impuesto);
+        //$('#id_total').val(total);
+        make_calculations();
+        $('#id_item').val(ui.item.id);
+      }
+    });
+  });
+
+/*
+var para2={{factcompra_json}};
+//console.log(para2);
+
+var params = [];
+for (var key in para2) {
+  if (para2.hasOwnProperty(key)) {
+    params.push({
+        "name": key,
+        "value": para2[key]
+        })  
+  }
+}
+
+//console.log(params);
+
+$('#myform').submit(function () {
+    $(this).append($.map(params, function (param) {
+        return   $('<input>', {
+            type: 'hidden',
+            name: param.name,
+            value: param.value,
+        })
+    }))
+});
+
+*/
+//var params = []
+//console.log({{factcompra_json}});
+
+  </script>
+
+{% endblock %}
+  

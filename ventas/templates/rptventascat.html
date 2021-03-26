@@ -1,0 +1,46 @@
+{% extends "base_no_menu.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h2>Reporte de Ventas  <small>Productos Desde {{data2.fecha_desde}} hasta el {{data2.fecha_hasta}}</small></h2>
+				
+				<h2> </h2>				
+			</div>
+														
+					
+		<table class="table table-hover table-condensed"  >  
+			<tr>
+				<td><b>Articulo</b></td>
+				<td align="right"><b>Cantidad</b></td>
+				<td align="right"><b>Ventas Bsf.</b></td>								
+			</tr>
+			{% for rec in data %}			
+			<tr>				
+				<td >{{ rec.item__categoria__nombre }}</td>				
+				<td align="right">{{ rec.cantidad}}</td>				
+				<td align="right">{{ rec.total |intcomma }}</td>								
+
+			</tr>
+			{% endfor %}
+			<tr>
+			<td colspan="7"> <hr></td>				
+			</tr>
+			<tr>
+				<td></td>
+				<td align="right"><b>Tot. Cantidad</b></td>
+				<td align="right"><b>Tot. Bsf</b></td>
+			</tr>
+
+			<tr>				
+				<td></td>				
+				<td align="right"><b>{{data2.total_cantidad }}</b></td>
+				<td align="right"><b>{{data2.total_total |intcomma }}</b></td>
+			</tr>
+			
+		</table>
+
+						
+{% endblock %}
+
+
+

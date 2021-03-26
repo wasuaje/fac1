@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Inventario</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/inventario/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form" >
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Articulo</th>
+  			<th>Fecha</th>
+  			<th>cantidad</th>
+  			<th>Importe</th>
+  			<th>Valor</th>  			
+  			<th>Accion</th></tr>
+	    {% for inventario in inventarios %}
+	        <tr>
+	        	<td>{{ inventario.articulo__descripcion }}</td>	        	
+	        	<td>{{ inventario.fecha_hora }}</td>	        	
+	        	<td>{{ inventario.cantidad }}</td>	        	
+	        	<td>{{ inventario.articulo__importe |floatformat:"2" | intcomma}}</td>	        	
+            	<td>{{ inventario.valor |floatformat:"2" | intcomma}}</td>					
+	        <td>	        
+	        <a href="edit/{{inventario.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{inventario.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	<tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    	</td></tr>
+	    	{% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if inventarios.has_previous %}
+		            <a href="?page={{ inventarios.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ inventarios.number }} of {{ inventarios.paginator.num_pages }}.
+		        </span>
+
+		        {% if inventarios.has_next %}
+		            <a href="?page={{ inventarios.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+ <script>
+  $(function() {
+    $( "#id_fecha" ).datepicker({ dateFormat: 'yy-mm-dd' });    
+    write_client_name();
+  });		
+ </script>			
+{% endblock %}
+

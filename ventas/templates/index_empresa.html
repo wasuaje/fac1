@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Empresa</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>	
+				{% if registros == 0 %}			
+				 <center>				
+				 <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/empresa/add/' ">Agregar</button></center>				
+				 </h2>			
+				 {% endif %}
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Cliente</th><th>R.i.f</th><th>Email</th><th>Telefono</th><th>Logo</th><th>Accion</th></tr>
+	    {% for empresa in empresas %}
+	        <tr>
+	        	<td>{{ empresa.razon_social }}</td>	        	
+	        	<td>{{ empresa.rif }}</td>
+	        	<td>{{ empresa.email }}</td>
+	        	<td>{{ empresa.tlf }}</td>	
+	        	<td><img src="{{ empresa.ruta_foto.url }}" alt="" height="80" width="120" /></td>	
+	        <td><a href="edit/{{empresa.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{empresa.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    <tr><td colspan="5">
+	    	<h3>No se encontraron registros</h3>	    
+	    </td></tr>
+	    {% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if empresas.has_previous %}
+		            <a href="?page={{ empresas.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ empresas.number }} of {{ empresas.paginator.num_pages }}.
+		        </span>
+
+		        {% if empresas.has_next %}
+		            <a href="?page={{ empresas.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

@@ -1,0 +1,157 @@
+{% extends "base_no_menu.html" %}
+
+{% block main %}
+			<div class="page-header">
+				
+				<h1>
+					Sistema de Facturacion <small>Reporte de cierre de turno
+</small>
+				</h1>
+			</div>
+						
+				{% if error or success %}
+					{% if error %}
+					<div class="alert alert-danger" role="alert">{{ error }} <a href="/">Salir</a></div>
+					{% endif %}
+					{% if success %}
+					<div class="alert alert-success" role="alert">{{ success }} <a href="/">Salir</a></div>
+					{% endif %}
+				{% endif %}
+								
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-4">
+								<h3>Ventas Totales Bsf:	{{ data.ventas_total.total }}	</h3>
+								<table class="table table-hover table-condensed"  id="vta_detalle">  
+				                <tr><th>Articulo</th><th>Total</th></tr>        
+                                {% for rec in data.ventas_detalle %}
+				                  <tr> <td>{{ rec.item__descripcion }}</td> <td>{{ rec.total }}</td></tr>				                  		
+				                {% endfor%}	                
+				              	</table>
+							</div>
+							<div class="col-md-4">
+								<h3>Ventas / Categorias	</h3>
+								<table class="table table-hover table-condensed"  id="vta_cat">  
+				                <tr><th>Articulo</th><th>Total</th></tr>        
+                                {% for rec in data.ventas_categoria %}
+				                  <tr> <td>{{ rec.item__categoria__nombre }}</td> <td>{{ rec.total }}</td></tr>				                  		
+				                {% endfor%}	                
+				              	</table>
+							</div>
+							<div class="col-md-4">
+								<h3>Cobros	:	{{ data.cobros_total.total }}</h3>
+								<table class="table table-hover table-condensed"  id="cobros">  
+				                <tr><th>FormaPago</th><th>Total</th></tr>        
+                                {% for rec in data.cobros_detalle %}
+				                  <tr> <td>{{ rec.forma_pago__nombre }}</td> <td>{{ rec.total }}</td></tr>				                  		
+				                {% endfor%}	                
+				              	</table>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<h3>Entradas en caja</h3>
+								<table class="table table-hover table-condensed"  id="entradas">  
+				                <tr><th>Concepto</th><th>Total</th></tr>        
+                                {% for rec in data.cobros_detalle22 %}
+				                  <tr> <td>{{ rec.forma_pago__nombre }}</td> <td>{{ rec.total }}</td></tr>				                  		
+				                {% endfor%}	                
+				              	</table>
+							</div>
+							<div class="col-md-4">
+								<h3>Salidas de caja</h3>
+								<table class="table table-hover table-condensed"  id="salidas">  
+				                <tr><th>Concepto</th><th>Total</th></tr>        
+                                {% for rec in data.cobros_detalle22 %}
+				                  <tr> <td>{{ rec.forma_pago__nombre }}</td> <td>{{ rec.total }}</td></tr>				                  		
+				                {% endfor%}	                
+				              	</table>
+							</div>
+							<div class="col-md-4">
+								<h3>Cierre	</h3>
+								<form method="post" class="form" enctype="multipart/form-data" >
+								    {% csrf_token %}
+								    
+								    <div class="col-sm-10"> <label>Saldo Inicial:</label>
+				        				 <span class="sp_saldo_inicial">{{ data.saldo_inicial }} </span></div>	
+
+
+										<div class="col-sm-10"> <label>(+) Ventas</label></div>
+				        				<div class="col-sm-10"> <span class="sp_saldo_inicial">{{ data.ventas_total.total }} </span></div>	
+
+
+				        				<div class="col-sm-10"> <label>(+) Entradas Manuales</label></div>
+				        				<div class="col-sm-10"> <span class="sp_saldo_inicial">{{ data.entradas_manuales.total }} </span></div>	
+
+				        				<div class="col-sm-10"> <label>(-) Salidas Manuales</label></div>
+				        				<div class="col-sm-10"> <span class="sp_saldo_inicial">{{ data.salidas_manuales.total }} </span></div>	
+
+								    {% for field in form %}
+								        <div class="form-group">
+								         <div class="col-sm-10">{{ field.label_tag }}</div>
+				        				 <div class="col-sm-10"> {{ field }} </div>				        
+				        				 {% if field.errors %}
+								         <div class="col-sm-6">
+				        				 <div class="alert alert-danger" role="alert">{{ field.errors }}</div>
+				        				 </div>
+				        				{% endif %}				         
+								        </div>
+								    {% endfor %}
+								    	
+								    									  
+								    	<div class="col-sm-10"> <label>Saldo Final: </label>
+				        				<span class="sp_saldo_final">{{ data.saldo_final}} </span></div>	
+
+				        				{% if not success or error %}
+								    	<div class="form-group">
+										<div class="col-sm-10"> <button type="submit" class="btn btn-default">Enviar</button></div>
+										</div>    				    
+										{% endif%}
+								</form>
+							</div>
+						</div>
+					</div>
+
+
+<script>
+
+$( document ).ready(function() {   
+	var saldoini = Number($('.sp_saldo_final').text());
+	var retiroini = Number($('#id_retiro_banco').val());
+	var f_sini = Number($('#id_faltante_sobrante').val());
+	if ($('#id_retiro_banco').val()=="") {$('#id_retiro_banco').val('0.00') ;}
+	if ($('#id_faltante_sobrante').val()=="") {$('#id_faltante_sobrante').val('0.00') ;}
+	//saldoini = saldoini + f_sini - retiroini;
+	//$('.sp_saldo_final').text(saldoini);
+    //console.log($('#id_retiro_banco').val())
+
+   $('#id_faltante_sobrante').change(function(){
+	   	f_s = Number($('#id_faltante_sobrante').val());
+	   	//console.log(f_s)
+	   	retiro = Number($('#id_retiro_banco').val());
+	   	//console.log(retiro)
+	   	saldo = saldoini - f_sini + f_s - retiro;
+	   	//console.log(saldo)
+	    $('.sp_saldo_final').text(saldo);
+	    });
+
+   $('#id_retiro_banco').change(function(){
+	   	f_s = Number($('#id_faltante_sobrante').val());
+	   	//console.log(f_s)
+	   	retiro = Number($('#id_retiro_banco').val());
+	   	//console.log(retiro)
+	   	saldo = saldoini - f_sini + f_s - retiro;
+	   	//console.log(saldo)
+	    $('.sp_saldo_final').text(saldo);
+	    });
+
+
+});
+
+</script>
+
+						
+{% endblock %}
+
+
+

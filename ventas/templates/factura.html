@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Factura</small>
+				</h1>
+			</div>
+
+			<h2>
+				Factura
+			</h2>
+			<p>
+				<form method="post" class="form" enctype="multipart/form-data" >
+				    {% csrf_token %}
+	    			<table class="table ">	 
+	    				<tr>
+	    					<td>{{form.cliente.label_tag}}</td>
+	    					<td colspan="3">
+	    						<div class="ui-widget">
+							       <input id="search" class="special" type="text" size="33" name="search" autocomplete="off"> {{ form.cliente }} 
+							     </div>
+	    					{% if form.cliente.errors %}
+        				 	<div class="alert alert-danger" role="alert">{{ form.cliente.errors }}</div>        				 	
+        					{% endif %}
+        					</td>
+	    				</tr>
+	    				
+	    				<tr>	    				
+	    					<td>{{form.fecha.label_tag}}</td>
+	    					<td>{{form.fecha}}
+	    					  {% if form.fecha.errors %}				         	
+        				 	  <div class="alert alert-danger" role="alert">{{ form.fecha.errors }}</div> {% endif %}
+        				 	</td>
+	    					<td>{{form.fecha_vencimiento.label_tag}}</td>
+	    					<td>{{form.fecha_vencimiento}}
+	    					 {% if form.fecha_vencimiento.errors %}				         	
+        				 	  <div class="alert alert-danger" role="alert">{{ form.fecha_vencimiento.errors }}</div> {% endif %}
+	    					</td>
+	    				</tr>
+
+
+	    				<tr>	    				
+	    					<td>{{form.nota_superior.label_tag}}</td>
+	    					<td>{{form.nota_superior}}</td>
+	    					<td>{{form.nota_detalle.label_tag}}</td>
+	    					<td>{{form.nota_detalle}}</td>
+	    				</tr>
+	    				<tr>
+	    					<td>{{form.contacto.label_tag}}</td>
+	    					<td colspan="3">{{form.contacto}}</td>
+	    				</tr>
+	    				<tr>	    					
+	    					<td colspan="4" align="center">
+	    					<div class="form-group">
+							<div class="col-sm-12"> <button type="submit" class="btn btn-primary btn-lg">Enviar</button></div>
+							</div>  
+	    					</td>
+	    				</tr>
+
+	    			</table>	 				    
+
+				      
+				    
+				</form>
+			</p>
+		
+ <script>
+  $(function() {
+    $( "#id_fecha" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $( "#id_fecha_vencimiento" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    write_client_name();
+  });
+
+
+  $(function() {    
+ 
+    $( "#search" ).autocomplete({
+      source: "/cliente/search/",
+      minLength: 3,
+      select: function( event, ui ) {
+        //console.log(ui.item + ui.item.value + ui.item.id);            
+        $('#id_cliente').val(ui.item.id);
+      }
+    });
+  });
+
+
+function write_client_name() {
+    //console.log("create post is working!") // sanity check
+    $.ajax({
+        url : "/cliente/searchid/", // the endpoint
+        type : "GET", // http method
+        data : { search : $('#id_cliente').val() }, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {               	        	
+			//console.log(json.cliente.razon_social);
+			razon=json.cliente.razon_social;
+            $('#search').val(razon);            
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {        
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the 
+        }
+    });
+};
+
+
+
+  </script>
+
+{% endblock %}
+

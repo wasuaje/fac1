@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Compras</small>
+				</h1>
+			</div>
+
+			<h2>
+				Factura
+			</h2>
+			<p>
+				<form method="post" class="form" enctype="multipart/form-data" >
+				    {% csrf_token %}
+	    			<table class="table ">	 
+	    				<tr>
+	    					<td>{{form.proveedor.label_tag}}</td>
+	    					<td >
+	    						<div class="ui-widget">
+							       <input id="search" class="special" type="text" size="33" name="search" autocomplete="off"> {{ form.proveedor }} 
+							     </div>
+	    					{% if form.proveedor.errors %}
+        				 	<div class="alert alert-danger" role="alert">{{ form.proveedor.errors }}</div>        				 	
+        					{% endif %}
+        					</td>
+        					<td>{{form.correlativo.label_tag}}</td>
+        					<td>{{form.correlativo}}</td>
+	    				</tr>
+	    				
+	    				<tr>	    				
+	    					<td>{{form.fecha.label_tag}}</td>
+	    					<td>{{form.fecha}}
+	    					  {% if form.fecha.errors %}				         	
+        				 	  <div class="alert alert-danger" role="alert">{{ form.fecha.errors }}</div> {% endif %}
+        				 	</td>
+	    					<td>{{form.fecha_vencimiento.label_tag}}</td>
+	    					<td>{{form.fecha_vencimiento}}
+	    					 {% if form.fecha_vencimiento.errors %}				         	
+        				 	  <div class="alert alert-danger" role="alert">{{ form.fecha_vencimiento.errors }}</div> {% endif %}
+	    					</td>
+	    				</tr>
+
+
+	    				<tr>	    				
+	    					<td>{{form.nota_superior.label_tag}}</td>
+	    					<td>{{form.nota_superior}}</td>
+	    					<td>{{form.nota_detalle.label_tag}}</td>
+	    					<td>{{form.nota_detalle}}</td>
+	    				</tr>
+	    				<tr>
+	    					<td>{{form.contacto.label_tag}}</td>
+	    					<td colspan="3">{{form.contacto}}</td>
+	    				</tr>
+	    				<tr>	    				
+	    					<td>{{form.pct_descuento.label_tag}}</td>
+	    					<td>{{form.pct_descuento}}</td>
+	    					<td>{{form.tot_descuento.label_tag}}</td>
+	    					<td>{{form.tot_descuento}}</td>
+	    				</tr>
+	    				<tr>	    				
+	    					<td>{{form.pct_impuesto.label_tag}}</td>
+	    					<td>{{form.pct_impuesto}}</td>
+	    					<td>{{form.tot_impuesto.label_tag}}</td>
+	    					<td>{{form.tot_impuesto}}</td>
+	    				</tr>
+	    				<tr>	    				
+	    					<td>{{form.subtotal.label_tag}}</td>
+	    					<td>{{form.subtotal}}</td>
+	    					<td>{{form.imponible.label_tag}}</td>
+	    					<td>{{form.imponible}}</td>
+	    				</tr>
+	    				<tr>	    				
+	    					<td>{{form.total_general.label_tag}}</td>
+	    					<td>{{form.total_general}}</td>
+	    					<td></td>
+	    					<td></td>
+	    				</tr>
+	    				<tr>	    					
+	    					<td colspan="4" align="center">
+	    					<div class="form-group">
+							<div class="col-sm-12"> <button type="submit" class="btn btn-primary btn-lg">Enviar</button></div>
+							</div>  
+	    					</td>
+	    				</tr>
+
+	    			</table>	 				    
+
+				      
+				    
+				</form>
+			</p>
+		
+ <script>
+  $(function() {
+    $( "#id_fecha" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $( "#id_fecha_vencimiento" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    write_client_name();
+  });
+
+
+  $(function() {    
+ 
+    $( "#search" ).autocomplete({
+      source: "/proveedor/search/",
+      minLength: 3,
+      select: function( event, ui ) {
+        //console.log(ui.item + ui.item.value + ui.item.id);            
+        $('#id_proveedor').val(ui.item.id);
+      }
+    });
+  });
+
+
+function write_client_name() {
+    //console.log("create post is working!") // sanity check
+    $.ajax({
+        url : "/proveedor/searchid/", // the endpoint
+        type : "GET", // http method
+        data : { search : $('#id_proveedor').val() }, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {               	        	
+			//console.log(json.proveedor.razon_social);
+			razon=json.proveedor.razon_social;
+            $('#search').val(razon);            
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {        
+            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the 
+        }
+    });
+};
+
+
+
+  </script>
+
+{% endblock %}
+

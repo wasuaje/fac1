@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Inicio</small>
+				</h1>
+			</div>
+
+			<h2>
+				Bienvenido
+			</h2>
+			<p>
+				Facturacion es un sencillo sistema web para control de facturacion e inventario
+				esta pensado en la facilidad de uso y presentacion sobre complejidad de negocios
+				aun asi seguro puedes cubrir muchas de las necesidade de control para pequeñas
+				empresas
+			</p>
+
+			{% for msg in mensaje %}
+			<div class="alert alert-danger" role="alert">{{ msag}}  </div>
+			{% endfor %}
+
+
+			<h2>
+				Primera vez en el sitema
+			</h2>
+			<p>
+				Si esta comenzando operacion por primera vez en el Sistema, asegurese de configurar primero,<a class="btn" href="/categoria/">Categorias»</a> de productos, posteriormente <a class="btn" href="/articulo/">Articulos»</a> como tal. Prosiga configurando<a class="btn" href="/formapago/">Formas de Pago»</a> Los<a class="btn" href="/tipodoc/">Correlativos»</a> y los<a class="btn" href="/tipoimpuesto/"> Impuestos»</a>
+			</p>
+			<h2>
+				Para comenzar el dia
+			</h2>
+			<p>
+				Asegurese de abrir la caja del dia respectivo,<a class="btn" href="/turno/">Turno»</a> del dia, en cada cambio de operado de caja cierre turno y haga su arqueo, al final del dia cierre caja. Tenga cuidado con ambas operaciones de cierre, son irreversibles.
+			</p>		
+			<h2>
+				Al terminar la jornada
+			</h2>
+			<p>
+				Asegurese de abrir la caja del dia respectivo,<a class="btn" href="/turno/">Turno»</a> del dia, en cada cambio de operado de caja cierre turno y haga su arqueo, al final del dia cierre caja. Tenga cuidado con ambas operaciones de cierre, son irreversibles.
+			</p>		
+
+
+
+			
+			
+			
+			
+{% endblock %}

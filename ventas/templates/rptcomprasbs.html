@@ -1,0 +1,62 @@
+{% extends "base_no_menu.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h2>Reporte de Compras  <small>BsF. Desde el {{data2.fecha_desde}} hasta el {{data2.fecha_hasta}}</small></h2>
+				
+				<h2> </h2>				
+			</div>
+														
+					
+		<table class="table table-hover table-condensed"  >  
+			<tr>
+				<td><b>Fact. Nro.</b></td>
+				<td><b>Fecha</b></td>
+				<td><b>Vencimiento</b></td>
+				<td><b>Proveedor</b></td>
+				<td align="right"><b>Imponible</b></td>
+				<td align="right"><b>I.V.A</b></td>
+				<td align="right"><b>Total</b></td>
+			</tr>
+			{% for rec in data %}
+			<tr>
+				<td >{{ rec.correlativo }}</td>				
+				<td >{{ rec.fecha }}</td>				
+				<td >{{ rec.fecha_vencimiento }}</td>
+				<td >{{ rec.proveedor.razon_social }}</td>				
+				<td align="right">{{ rec.imponible |intcomma}}</td>				
+				<td align="right">{{ rec.tot_impuesto |intcomma }}</td>				
+				<td align="right">{{ rec.total_general |intcomma}}</td>				
+
+			</tr>
+			{% endfor %}
+			<tr>
+			<td colspan="7"> <hr></td>				
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td align="right"><b>Tot. Imponible</b></td>
+				<td align="right"><b>Tot. I.V.A</b></td>
+				<td align="right"><b>Total</b></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td align="right"><b>{{data2.imponible |intcomma }}</b></td>
+				<td align="right"><b>{{data2.iva |intcomma}}</b></td>
+				<td align="right"><b>{{data2.total |intcomma }}</b></td>
+			</tr>
+			
+		</table>
+
+						
+{% endblock %}
+
+
+

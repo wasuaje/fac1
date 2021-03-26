@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Tipos de Impuesto</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/tipoimpuesto/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Codigo</th><th>Nombre</th><th>Valor</th><th>Desde</th><th>Hasta</th></tr>
+	    {% for tipoimpuesto in tipoimpuestos %}
+	        <tr>
+	        	<td>{{ tipoimpuesto.codigo }}</td>	        	
+            	<td>{{ tipoimpuesto.nombre }}</td>	        	
+            	<td>{{ tipoimpuesto.valor }}</td>	        	
+            	<td>{{ tipoimpuesto.valido_desde }}</td>	        	
+            	<td>{{ tipoimpuesto.valido_hasta }}</td>	        	
+	        <td><a href="edit/{{tipoimpuesto.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{tipoimpuesto.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	<tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    	</td></tr>
+	    {% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if tipoimpuestos.has_previous %}
+		            <a href="?page={{ tipoimpuestos.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ tipoimpuestos.number }} of {{ tipoimpuestos.paginator.num_pages }}.
+		        </span>
+
+		        {% if tipoimpuestos.has_next %}
+		            <a href="?page={{ tipoimpuestos.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

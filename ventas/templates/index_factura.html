@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Facturas</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/factura/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Factura</th>
+  			<th>Cliente</th>
+  			<th>Fecha</th>
+  			<th>Vencimiento</th>
+  			<th>Subtotal</th>
+  			<th>Base Imp.</th>
+  			<th>Tot. Imp.</th>
+  			<th>Tot. Dcto.</th>
+  			<th>Total</th>
+  			<th>Accion</th></tr>
+	    {% for factura in facturas %}
+	        <tr>
+	        	<td>{{ factura.correlativo }}</td>	        	
+	        	<td>{{ factura.cliente }}</td>	        	
+	        	<td>{{ factura.fecha }}</td>	        	
+            	<td>{{ factura.fecha_vencimiento }}</td>	
+				<td align="right">{{ factura.sub_total |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factura.imponible |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factura.tot_impuesto |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factura.tot_descuento |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factura.total_general |floatformat:"2"|intcomma }}</td>	
+            	
+	        <td>
+	        <a href="/detalle/{{factura.pk}}"> <img src="/media/icons/database_add_32.png" \>  </a>	
+	        <a href="edit/{{factura.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{factura.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	<tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    	</td></tr>
+	    	{% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if facturas.has_previous %}
+		            <a href="?page={{ facturas.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ facturas.number }} of {{ facturas.paginator.num_pages }}.
+		        </span>
+
+		        {% if facturas.has_next %}
+		            <a href="?page={{ facturas.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

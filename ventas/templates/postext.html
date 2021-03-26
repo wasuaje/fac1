@@ -1,0 +1,547 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>POS</small>
+				</h1>
+			</div>
+
+{% if error %}
+          <div class="alert alert-danger" role="alert">{{ error }} <a href="/">Salir</a></div>
+{% else %}
+						<!-Datos de la factura->
+<div class="row clearfix">
+     <div class="col-md-6 column">
+          <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  Factura
+                </h3>
+              </div>
+              <table class="table-condensed" >  
+                <tr>
+                  <td><h4>Factura:</h4></td>
+                  <td><input id="id_factura"  type="hidden" >
+                    <h4> <span class="sp_factura_correlativo"></span> </h4></td>             
+                  <td><h4>Fecha:</h4></td>
+                  <td><h4> <span class="sp_factura_fecha"></span> </h4></td>
+                </tr>
+                <tr>
+                  <td><h4>Cliente:</h4> </td>                  
+                   <td>
+                    <div class="ui-widget">
+                    <input id="search_cliente" class="special" type="text" size="13" name="search_client"   autocomplete="off" placeholder="Buscar cliente">
+                   
+                    <input id="id_cliente"  type="hidden" >
+                   
+                    <a id="modal-691651" href="#modal-container-691651" role="button" class="btn" data-toggle="modal">Nuevo</a>
+                    </div> 
+                  </td>                  
+                  <td><h4>Rif:</h4></td>
+                  <td><h4> <span class="sp_rif"></span> </h4></td>
+                </tr>
+               </table> 
+				    				                              
+             </div>
+        </div>
+   
+      <!-Totales factura->
+          
+        <div class="col-md-6 column">
+           <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  Totales
+                </h3>                
+              </div>
+              <div class="panel-body">
+              <table class="table-condensed"  >  
+                <tr>
+                  <td><h4>Subtotal:</h4></td>                  
+                  <td><h4><span class="sp_subtotal">0.00</span></h4></td>                
+                  <td><h4>Base Imp.:</h4></td>                  
+                  <td><h4><span class="sp_baseimponible">0.00</span></h4></td>
+                  <td><h4>I.V.A: </h4></td>                  
+                  <td><h4> <span class="sp_totimpuesto">0.00</span> </h4></td>                  
+                </tr>
+                
+              </table>
+              </div>
+              <div class="panel-footer">
+                <table class="table-condensed"  align="center">  
+                  <tr >
+                  <td  ><h4><strong>TOTAL: 
+                      <span class="sp_totalgeneral">0.00</span>
+                      </strong>           </h4>
+                  </td>                             
+                </tr>
+                </table>
+              </div>
+            </div>
+        </div>
+
+  <!-endrow->               
+  </div>
+         
+       
+  <div class="row clearfix">								    						
+      <div class="col-md-12 column">
+              
+      </div>
+      <div class="col-md-6 column">
+           <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  Item 
+                </h3>                                                        
+              </div>
+      <div class="ui-widget">
+        
+         <input id="codigo_articulo" class="special" type="text" size="35" name="codigo_articulo" autocomplete="off" placeholder="Codigo de producto" >                      
+         <input id="cantidad_articulo" class="special" type="text" size="2" name="cantidad_articulo" autocomplete="off" placeholder="1" value="1" >                      
+         Tab=Insertar
+         <!-- <button  class="btn btn-default" id="btn_fact" onclick="#" >Agregar</button> -->
+        
+       </div>         
+      <table class="table table-hover table-condensed" id="lineas">  
+  		<tr><th>Cantidad</th><th>Articulo</th><th>Importe</th><th>Total</th><th>Accion</th></tr>  				
+        
+    	</table>
+      </div>
+  </div>
+
+      <div class="col-md-6 column">
+           <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  Cobros
+                </h3>
+              </div>
+              
+              <select id="select_formapago">                
+              {% for element in formaspago %}
+              <option value={{ element.id }}>{{ element.nombre }}
+              {% endfor %}
+              </select>
+              
+              <select id="select_banco">
+              {% for element in banco %}
+              <option value={{ element.id }}>{{ element.nombre }}
+              {% endfor %}
+              </select>
+
+
+              <input id="monto_cobro" class="special" type="text" size="15" name="monto_cobro" autocomplete="off" placeholder="Monto Bs." >                      
+              <input id="aprobacion_cobro" class="special" type="text" size="15" name="aprobacion_cobro" autocomplete="off" placeholder="Aprobacion Nro"  >                      
+              <button  class="btn btn-default"  onclick="process_cobro()" >Cobrar</button> 
+              
+              <table class="table table-hover table-condensed"  id="cobros">  
+                <tr><th>Monto</th><th>Forma Pago</th><th>Aprobacion</th><th>Accion</th></tr>        
+                  <tr>
+                  <td colspan="4" ><h4><strong>No hay pagos registrados </h4>                  
+                  </td>                             
+                </tr>
+              </table>
+
+              <div class="panel-footer">
+                <table class="table-condensed"  align="center" id="tot_cobros">  
+                  <tr >
+                  <td  ><h4><strong>Pendiente por pagar: 
+                  <span class="sp_totcobro">0.00</span></strong></h4>
+                  </td>                             
+                </tr>
+                </table>
+              </div>
+
+          </div>
+      </div>              
+    <!-endrow->
+</div>
+
+
+<div class="row clearfix">
+        <div class="col-md-12 column">
+              <hr></hr>
+        </div>              
+</div>    
+<div class="row clearfix">
+        <div class="col-md-12 column">
+              <center>
+              <button type="button" class="btn btn-success btn-lg" onclick="window.location.href='/postext/'">Nueva</button>
+              <a  href="/" role="button" class="btn" >Salir</a>
+              <!-- <button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/'">Salir</button> -->
+              </center>
+        </div>              
+</div>    
+
+       
+      <!-modal cliente->
+      <div class="modal fade" id="modal-container-691651" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title" id="myModalLabel">
+                Nuevo Cliente
+              </h4>
+            </div>
+            <div class="modal-body">
+          <form role="form">
+           <div class="form-group">
+             <label for="razon_social">Razon Social</label><input class="form-control" id="razon_social" type="text" />
+          </div>
+          <div class="form-group">
+             <label for="rif">Rif</label><input class="form-control" id="rif" type="text" />
+          </div>
+          <div class="form-group">
+             <label for="telefono">Telefono</label><input class="form-control" id="telefono" type="text" />
+          </div>
+        </form>            
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
+               <button type="button" class="btn btn-primary" onclick="save_client()">Salvar</button>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+      <!-modal cliente->
+    
+
+<script>
+
+
+$( document ).ready(function() {
+   $('#id_cliente').val("");
+   $('#id_factura').val("");
+   //$('#aprobacion_cobro').css({"visibility":"hidden"});
+   $('#aprobacion_cobro').hide();
+   $('#select_banco').hide()
+
+   $('#select_formapago').change(function(){
+      var valor = $(this).find("option:selected").text();
+      valor=$.trim(valor);
+      valor=valor.toUpperCase()
+      //alert( $("#select_formapago option:selected").text() ) ;
+      if ( valor == "EFECTIVO" ){
+        //alert("**"+valor+"***");
+        $('#aprobacion_cobro').hide();
+        $('#select_banco').hide()
+        $('#aprobacion_cobro').attr('size',15)
+        $('#monto_cobro').attr('size',15)
+      }
+      if ( valor != "EFECTIVO" ){
+        //alert("**"+valor+"***");
+        $('#select_banco').show()
+        $('#aprobacion_cobro').show();
+        $('#aprobacion_cobro').attr('size',6)
+        $('#monto_cobro').attr('size',6)
+      }
+      
+    });
+  
+   
+   $('#codigo_articulo').change(function(e){
+     
+     if ( $('#codigo_articulo').val() == "" ) {       
+      e.stopPropagation();
+       return false;       
+      }
+
+     if ( $('#codigo_articulo').val() != "" ) {      
+       process_line();          
+       e.stopPropagation();
+       return false;              
+       
+
+     }
+     
+
+    });
+
+
+});
+
+function blanquea_campo(){
+  $('#codigo_articulo').val("") ;
+
+}
+
+$(function() {     
+    $( "#search_cliente" ).autocomplete({
+      source: "/cliente/search/",
+      minLength: 2,
+      select: function( event, ui ) {
+        //console.log(ui.item + ui.item.value + ui.item.id);
+        //sub_imp=ui.item.importe*(ui.item.impuesto/100)
+        //sub_dct=ui.item.importe*(ui.item.descuento/100)
+        //$('#id_total').val(total);        
+        $('#id_cliente').val(ui.item.id);
+        $('.sp_rif').text(ui.item.rif);
+      }
+    });
+  });
+
+function save_client(){
+  razon = $('#razon_social').val();
+  rif = $('#rif').val();
+  telefono = $('#telefono').val();
+  //console.log(razon,rif,telefono)
+  $.ajax({
+  url: "/cliente/qadd/",
+  type: 'GET',
+  data: {"razon":razon,"rif":rif,"telefono":telefono},
+  success: function(data) {    
+    //console.log(data.nuevo_cliente.razon_social);
+    $('#id_cliente').val(data.nuevo_cliente.id);
+    $('#search_cliente').val(data.nuevo_cliente.razon_social);
+    $('.sp_rif').text(data.nuevo_cliente.rif);
+  },
+  error: function() {
+    alert( "Ha ocurrido un error" );
+   }
+  });
+}
+
+function process_line(){
+  var errores=0;
+  //verifico que este seteado el cliente
+  id_cliente = $('#id_cliente').val();
+  if ( id_cliente == "" ) { errores=errores+1; alert("Seleccione cliente") ; }
+
+  //busco si el codigo de articulo existe para poder insert
+  codigo = $('#codigo_articulo').val();
+  
+  $('#codigo_articulo').val("")
+
+  if ( codigo == "" ) { errores=errores+1; alert("Inserte Codigo") };
+  
+
+  if ( errores == 0 ){
+
+    $.ajax({
+    url: "/articulo/searchcode/",
+    type: 'GET',
+    data: {"codigo":codigo},
+      success: function(data) {    
+      //console.log(data.nuevo_cliente.razon_social);
+        if (data.articulo.id > 0) {                                          
+                add_line(data);                                        
+        } else {                  
+                alert( data.articulo.error );          
+                }        
+      },
+      error: function() {        
+              alert( "Ha ocurrido un error (search" );      
+            }      
+      });
+
+
+  } 
+
+}
+
+function add_line(data){
+ cantidad = $('#cantidad_articulo').val();
+ id_cliente = $('#id_cliente').val();
+ id_factura = $('#id_factura').val();
+ id_articulo = data.articulo.id;
+
+ $.ajax({
+      url: "/postext/addline/",
+      type: 'POST',
+      data: {"cantidad":cantidad,"id_articulo":id_articulo,"id_cliente":id_cliente,"id_factura":id_factura, csrfmiddlewaretoken: '{{ csrf_token }}'},
+        success: function(data) {   
+           
+            display_fact_data(data);
+
+
+        },
+        error: function() {
+            alert( "Ha ocurrido un error (line)" );
+        }            
+    });
+}
+
+function delete_line(linea){
+   $.ajax({
+      url: "/postext/delline/",
+      type: 'POST',
+      data: {"lineaid":linea,csrfmiddlewaretoken: '{{ csrf_token }}'},
+        success: function(data) {   
+
+            display_fact_data(data);
+        },
+        error: function() {
+            alert( "Ha ocurrido un error (line)" );
+        }            
+    });
+
+}
+
+
+function display_fact_data(data){
+
+//limpio los visores porque pueden eliminarse valores de excento a imponible y viceversa
+    $('.sp_subtotal').text("0.00"); 
+    $('.sp_baseimponible').text("0.00"); 
+    $('.sp_totimpuesto').text("0.00"); 
+    $('.sp_totalgeneral').text("0.00"); 
+
+//data de factura e su lugar
+
+if ( $('#id_factura').val() == "" )
+  {
+    id_factura=data.factura.id
+    $('.sp_factura_correlativo').text(data.factura.correlativo);
+    $('.sp_factura_fecha').text(data.factura.fecha);
+    $('#id_factura').val(id_factura);
+  }
+
+//totales de factura
+//console.log(data.lineas);
+
+if (data.totales.subtotal){ 
+    t_sub=accounting.formatNumber(data.totales.subtotal , 2, ",", ".")
+    $('.sp_subtotal').text(t_sub); 
+  }
+if (data.totales.imponible){ 
+    t_base=accounting.formatNumber(data.totales.imponible , 2, ",", ".")
+    $('.sp_baseimponible').text(t_base); 
+    }
+if (data.totales.tot_impuesto){ 
+    t_impuesto=accounting.formatNumber(data.totales.tot_impuesto , 2, ",", ".")
+    $('.sp_totimpuesto').text(t_impuesto); 
+      }
+if (data.totales.total_general){         
+    t_total=accounting.formatNumber(data.totales.total_general , 2, ",", ".")
+    t_cobro=accounting.formatNumber(data.totales.total_general-data.cobros.total , 2, ",", ".")
+    $('.sp_totalgeneral').text(t_total); 
+    $('.sp_totcobro').text(t_cobro);
+  }
+
+
+$("#lineas").find("tr:gt(0)").remove();
+//agrego lineas
+for (ln in data.lineas) {
+ //console.log(data.lineas[ln]);
+ xn=data.lineas[ln]
+ str='<tr><td>'+xn.cantidad+'</td><td>'+xn.articulo+'</td><td>'+xn.importe+'</td><td>'+xn.total+'</td>'
+ str=str+'<td><a onclick=\"delete_line('+xn.id+')\"'+'><img src=\"/media/icons/close_32.png\"\> </a></td></tr>';
+
+  $('#lineas > tbody:last-child').append(str);    
+ 
+   }
+            
+ }
+
+function process_cobro(){
+  var errores=0;
+  id_factura = $('#id_factura').val();
+  pendiente=$('.sp_totcobro').text();
+  var formapago = $("#select_formapago").find("option:selected").text();
+  formapago=$.trim(formapago);  
+  formapago=formapago.toUpperCase()
+  
+  //extraigo el monto del input
+  var monto=$('#monto_cobro').val();
+  //si la forma de pago es diferente de efectivo debe haber aprobacion
+  var aprobacion=$('#aprobacion_cobro').val();
+  //id del banco
+  var idbanco=$("#select_banco").val();
+  //id formapago
+  var idformapago=$("#select_formapago").val();
+  //alert("FP"+idformapago)
+  //alert("BCO:"+idbanco)
+  
+  if ( formapago != "EFECTIVO" && aprobacion == "" ) {
+       errores=errores+1; alert("Debe haber aprobacion o referencia"); 
+      }
+  if ( monto == "" ) {
+       errores=errores+1; alert("Ingrese un monto a cobrar"); 
+      }
+
+  if ( id_factura == "" ) {
+       errores=errores+1; alert("Agregue productos primero"); 
+      }
+
+  if ( formapago == "EFECTIVO" && errores == 0 ) { idbanco=""}
+  
+  if ( pendiente == "0.00" || pendiente == "0,00" ) {
+       errores=errores+1; alert("Factura ya cancelada"); 
+      }
+    //console.log( pendiente )
+    //console.log( Number(pendiente) )
+  if ( Number(monto) > Number(pendiente) ) {
+       errores=errores+1; alert("No puede pagar demas"); 
+      }
+
+
+  //SI no hay errores procedo a llamar la funcion ajax para insertar
+  if ( errores == 0 ){
+
+     $.ajax({
+      url: "/postext/addcobro/",
+      type: 'POST',
+      data: {"id_formapago":idformapago,"id_banco":idbanco,"monto":monto,"id_factura":id_factura,"aprobacion":aprobacion,csrfmiddlewaretoken: '{{ csrf_token }}'},
+        success: function(data) {   
+            display_cobro_data(data);
+        },
+        error: function() {
+            alert( "Ha ocurrido un error (cobro)" );
+        }            
+    });
+
+  }
+}
+
+function display_cobro_data(data){
+   
+  if (data.totales.pendiente){ 
+    t_sub=accounting.formatNumber(data.totales.pendiente , 2, ",", ".")
+    $('.sp_totcobro').text(t_sub); 
+    $('#monto_cobro').val(data.totales.pendiente);
+    $('#aprobacion_cobro').val("");
+  }
+
+  //elimino valore de la tabla de cobros para recrearls
+  $("#cobros").find("tr:gt(0)").remove();
+  //agrego lineas
+  for (ln in data.lineas) {
+    //console.log(data.lineas[ln]);
+    xn=data.lineas[ln]
+    str='<tr><td>'+xn.monto+'</td><td>'+xn.forma_pago+'</td><td>'+xn.aprobacion+'</td>'
+    str=str+'<td><a onclick=\"delete_cobro('+xn.id+')\"'+'><img src=\"/media/icons/close_32.png\"\> </a></td></tr>';
+
+    $('#cobros > tbody:last-child').append(str);    
+   
+    }
+
+
+}
+
+function delete_cobro(cobro){
+   $.ajax({
+      url: "/postext/delcobro/",
+      type: 'POST',
+      data: {"cobroid":cobro,csrfmiddlewaretoken: '{{ csrf_token }}'},
+        success: function(data) {   
+
+            display_cobro_data(data);
+        },
+        error: function() {
+            alert( "Ha ocurrido un error (cobro)" );
+        }            
+    });
+
+}
+
+
+  </script>
+{% endif %}
+
+{% endblock %}
+  

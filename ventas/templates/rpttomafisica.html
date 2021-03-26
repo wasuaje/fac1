@@ -1,0 +1,45 @@
+{% extends "base_no_menu.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h2>Reporte de Existencias <small>al {{data2.fecha_desde}} </small></h2>
+				
+				<h2> </h2>				
+			</div>
+														
+					
+		<table class="table table-hover table-condensed"  >  
+			<tr>
+				<td><b>Articulo</b></td>
+				<td align="right"><b>Cantidad Teorica</b></td>				
+				<td align="center"><b>Cantidad Conteo</b></td>				
+			</tr>
+			{% for rec in data %}			
+			<tr>				
+				<td >{{ rec.articulo__descripcion }}</td>				
+				<td align="right">{{ rec.total}}</td>
+				<td align="center">_____</td>
+			</tr>
+			{% endfor %}
+			<tr>
+			<td colspan="3"> <hr></td>				
+			</tr>
+			<tr>				
+				<td></td>
+				<td align="right"><b>Tot. Cantidad</b></td>				
+				<td></td>
+			</tr>
+
+			<tr>								
+				<td></td>				
+				<td align="right"><b>{{data2.total }}</b></td>				
+				<td></td>
+			</tr>
+			
+		</table>
+
+						
+{% endblock %}
+
+
+

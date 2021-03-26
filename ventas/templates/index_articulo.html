@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Articulos</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/articulo/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Codigo</th><th>Articulo</th><th>Categoria</th><th>Precio</th><th>Dcto.</th><th>Imp.</th><th>Foto</th><th>Accion</th></tr>
+	    {% for articulo in articulos %}
+	        <tr>
+	        	<td>{{ articulo.codigo }}</td>	        	
+	        	<td>{{ articulo.descripcion }}</td>	        	
+	        	<td>{{ articulo.categoria }}</td>
+	        	<td>{{ articulo.importe }}</td>
+	        	<td>{{ articulo.descuento }}</td>
+	        	<td>{{ articulo.tipoimpuesto.valor }}</td>
+            <td><img src="{{ articulo.ruta_foto.url }}" alt="" height="120" width="160" /> </td>        
+	        <td><a href="edit/{{articulo.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{articulo.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    <tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    </td></tr>
+	    {% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if articulos.has_previous %}
+		            <a href="?page={{ articulos.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ articulos.number }} of {{ articulos.paginator.num_pages }}.
+		        </span>
+
+		        {% if articulos.has_next %}
+		            <a href="?page={{ articulos.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

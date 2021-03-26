@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Categorias</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/categoria/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Categoria</th><th>Foto</th><th>Accion</th></tr>
+	    {% for categoria in categorias %}
+	        <tr>
+	        	<td>{{ categoria.nombre }}</td>	        	
+            <td><img src="{{ categoria.ruta_foto.url }}" alt="" height="120" width="160" /> </td>
+	        <td><a href="edit/{{categoria.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{categoria.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	<tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    	</td></tr>
+	    {% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if categorias.has_previous %}
+		            <a href="?page={{ categorias.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ categorias.number }} of {{ categorias.paginator.num_pages }}.
+		        </span>
+
+		        {% if categorias.has_next %}
+		            <a href="?page={{ categorias.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

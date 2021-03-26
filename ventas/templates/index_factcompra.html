@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Factura de Compra</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/factcompra/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>Factura</th>
+  			<th>Proveedor</th>
+  			<th>Fecha</th>
+  			<th>Vencimiento</th>
+  			<th>Subtotal</th>
+  			<th>Base Imp.</th>
+  			<th>Tot. Imp.</th>
+  			<th>Tot. Dcto.</th>
+  			<th>Total</th>
+  			<th>Accion</th></tr>
+	    {% for factcompra in factcompras %}
+	        <tr>
+	        	<td>{{ factcompra.correlativo }}</td>	        	
+	        	<td>{{ factcompra.proveedor }}</td>	        	
+	        	<td>{{ factcompra.fecha }}</td>	        	
+            	<td>{{ factcompra.fecha_vencimiento }}</td>	
+				<td align="right">{{ factcompra.sub_total |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factcompra.imponible |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factcompra.tot_impuesto |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factcompra.tot_descuento |floatformat:"2"|intcomma }}</td>	
+				<td align="right">{{ factcompra.total_general |floatformat:"2"|intcomma }}</td>	
+            	
+	        <td>
+	        <a href="/detallefc/{{factcompra.pk}}"> <img src="/media/icons/database_add_32.png" \>  </a>	
+	        <a href="edit/{{factcompra.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{factcompra.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	<tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    	</td></tr>
+	    	{% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if factcompras.has_previous %}
+		            <a href="?page={{ factcompras.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ factcompras.number }} of {{ factcompras.paginator.num_pages }}.
+		        </span>
+
+		        {% if factcompras.has_next %}
+		            <a href="?page={{ factcompras.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+

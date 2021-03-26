@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block main %}
+			<div class="page-header">
+				<h1>
+					Sistema de Facturacion <small>Tipos de Documento</small>
+				</h1>
+			</div>
+			
+				<div class="col-sm-8">
+				<h2>				
+				<center>				
+				<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='/tipodoc/add/'">Agregar</button></center>				
+				</h2>			
+				 </div>
+				<div class="col-sm-4">  
+					<form method="post" class="form">
+					{{form}}
+				    {% csrf_token %}
+					<input type="submit" value="Enviar" />
+					 </div>
+			
+			<p>
+			<table class="table table-hover table-condensed">	 
+  		<tr><th>TipoDoc</th><th>Codigo</th><th>Correlativo</th><th>Accion</th></tr>
+	    {% for tipodoc in tipodocs %}
+	        <tr>
+	        	<td>{{ tipodoc.nombre }}</td>	        	
+	        	<td>{{ tipodoc.codigo }}</td>	        	
+            	<td>{{ tipodoc.correlativo }}</td>	        	
+	        <td><a href="edit/{{tipodoc.pk}}"> <img src="/media/icons/pencil_32.png" \>  </a>
+	        <a href="delete/{{tipodoc.pk}}"> <img src="/media/icons/close_32.png"\> </a>
+	        </td>
+	        	
+	        </tr>
+	        	        
+	        {% empty %}
+	    	<tr><td colspan="3">
+	    	<h3>No se encontraron registros</h3>	    
+	    	</td></tr>
+	    {% endfor %}
+	    </p>
+	</table>
+		<div class="pagination">
+		    <span class="step-links">
+		        {% if tipodocs.has_previous %}
+		            <a href="?page={{ tipodocs.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ tipodocs.number }} of {{ tipodocs.paginator.num_pages }}.
+		        </span>
+
+		        {% if tipodocs.has_next %}
+		            <a href="?page={{ tipodocs.next_page_number }}">next</a>
+		        {% endif %}
+		    </span>
+		</div>
+	
+  
+			
+			
+{% endblock %}
+
